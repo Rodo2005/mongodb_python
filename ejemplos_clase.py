@@ -63,7 +63,7 @@ def insert_grupo(group):
     conn.close()
 
 
-def show(fetch_all=True):
+def show(fetch_all=False):
     # Conectarse a la base de datos
     conn = TinyMongoClient()
     db = conn[db_name]
@@ -145,42 +145,42 @@ def remove_persona(name):
 
 if __name__ == '__main__':
     print("Bienvenidos a otra clase de Inove con Python")
-    # Borrar la DB
-    clear()
+    # Borrar la DB
+    # clear()
 
     # Fill database
-    insert_persona('Inove', 12, 'Argentina')
-    insert_persona('Python', 29, 'Holanda')
-    insert_persona('Max', 35, 'Estados Unidos')
-    insert_persona('Mirta', 93, 'Argentina')
+    # insert_persona('Inove', 12, 'Argentina')
+    # insert_persona('Python', 29, 'Holanda')
+    # insert_persona('Max', 35, 'Estados Unidos')
+    # insert_persona('Mirta', 93, 'Argentina')
 
     # Mostrar contenido
-    show()
+    # show()
 
     # Modificar contenido de "Inove", agregar dirección
     # ------------------------------------------------
-    inove_data = find_persona('Inove')
+    # inove_data = find_persona('Inove')
 
-    address = {"address": {"street": "Monroe", "number": 500}}
-    update_persona_address('Inove', address)
+    # address = {"address": {"street": "Monroe", "number": 500}}
+    # update_persona_address('Inove', address)
 
-    inove_data = find_persona('Inove')
+    # inove_data = find_persona('Inove')
     # ------------------------------------------------
 
     # Contar cuantos argentinos en la db
-    print('Cantidad de argentinos:', count_by_country("Argentina"))
+    # print('Cantidad de argentinos:', count_by_country("Argentina"))
 
     # Contar cuantas personas son mayores de 25
-    lookfor_older_than(25)
+    # lookfor_older_than(25)
 
     # Insertar un grupo de datos
     # ------------------------------------------------
-    group = [{"age": 40, "nationality:": "Estados Unidos"},
-             {"name": "SQL", "age": 13, "nationality:": "Inglaterra"},
-             {"name": "SQLite", "nationality:": "Estados Unidos"}
-             ]
+    # group = [{"age": 40, "nationality:": "Estados Unidos"},
+             #{"name": "SQL", "age": 13, "nationality:": "Inglaterra"},
+             #{"name": "SQLite", "nationality:": "Estados Unidos"}
+             #]
 
-    insert_grupo(group)
+    # insert_grupo(group)
     print('\n\nMostrar nuevos datos insertados por grupo')
     show(False)
     # ------------------------------------------------

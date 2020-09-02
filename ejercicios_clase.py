@@ -40,7 +40,7 @@ def clear():
     conn.close()
 
 
-def fill():
+def fill(group):
     print('Completemos esta tablita!')
     # Llenar la coleccion "estudiante" con al menos 5 estudiantes
     # Cada estudiante tiene los posibles campos:
@@ -52,6 +52,12 @@ def fill():
 
     # Se debe utilizar la sentencia insert_one o insert_many.
 
+    conn = TinyMongoClient()
+    db = conn[db_name]
+    db.estudiante.insert_many(group)
+    conn.close()
+
+
 
 def show():
     print('Comprovemos su contenido, ¿qué hay en la tabla?')
@@ -59,6 +65,13 @@ def show():
     # todos los documentos de la DB
     # Queda a su criterio serializar o no el JSON "dumps"
     #  para imprimirlo en un formato más "agradable"
+
+    conn = TinyMongoClient()
+    db = conn[db_name]
+    cursor = db.estudiante.find()
+    data = list(cursor)
+    json_string = json.dumps(data, indent=4)
+    print(json_string)
 
 
 def find_by_grade(grade):
@@ -70,6 +83,16 @@ def find_by_grade(grade):
     # en pantalla unicamente los siguiente campos por cada uno:
     # id / name / age
 
+    conn = TinyMongoClient()
+    db = conn[db_name]
+    finde_grade = db.estudiante.find({"grade": grade})
+    data = list(finde_grade)
+    for doc in data:
+        identificador = doc["_id"]
+        nombre = doc["name"]
+        edad = doc["age"]
+        print("id:",identificador, " name:", nombre, " age:", edad)
+
 
 def insert(student):
     print('Nuevos ingresos!')
@@ -78,25 +101,45 @@ def insert(student):
 
     # El parámetro student deberá ser un JSON el cual se inserta en la db
 
+    conn = TinyMongoClient()
+    db = conn[db_name]
+    # estud_nuevo = json.dumps(student)
+    db.estudiante.insert_one(student)
+    cursor = db.estudiante.find()
+    for doc in cursor:
+        print(doc)
+    conn.close()
+
 
 def count(grade):
     print('Contar estudiantes')
     # Utilizar la sentencia find + count para contar
     # cuantos estudiantes pertenecen el grado "grade"
 
+    conn = TinyMongoClient()
+    db = conn[db_name]
+    count = db.estudiante.find({"grade": grade}).count()
+    print('Hay', count, 'estudiantes en', grade, 'año')
+    conn.close()
+    
 
 if __name__ == '__main__':
     print("Bienvenidos a otra clase de Inove con Python")
     # Borrar la db
     clear()
-
-    # fill()
-    # show()
+    group = [{"name": "Carlos", "age": 15, "grade": 3, "tutor": "Marcos" },
+            {"name": "Martin", "age": 16, "grade": 4, "tutor": "Julian"},
+            {"name": "Esteban", "age": 17, "grade": 5, "tutor": "Carolina"},
+            {"name": "Julio", "age": 17, "grade": 5, "tutor": "Marcos"},
+            {"name": "Franccesca", "age": 16, "grade": 4, "tutor": "Carolina"}
+            ]
+    fill(group)
+    show()
 
     grade = 3
-    # find_by_grade(grade)
+    find_by_grade(grade)
 
-    # student = {....}
-    # insert(student)
+    student = {"name": "Rodrigo", "age": 15, "grade": 3, "tutor": "Marcos"}
+    insert(student)
 
-    # count(grade)
+    count(grade)
